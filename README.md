@@ -4,7 +4,7 @@ projeto final da disciplina Algoritmo e Estrutura de Dados 1
 Sistema de Gerenciamento de Armazém:
 Estoque (Lista): Representará o estoque do armazém. Cada item no estoque terá informações como código do produto, nome, quantidade em estoque, etc. Pode ser implementado como uma lista duplamente encadeada.
 
-Pedidos (Fila): Os pedidos dos clientes serão armazenados em uma fila. Cada pedido terá informações como número do pedido, produtos solicitados, quantidade, etc.
+Pedidos (Fila): Os pedidos dos clientes serão armazenados em uma fila. Cada pedido terá informações como número do pedido, quantidade, etc.
 
 Itens Devolvidos (Pilha): Quando um cliente devolve um item, ele é adicionado a uma pilha. Essa pilha pode ser usada para processar devoluções e, se necessário, reabastecer o estoque.
 
