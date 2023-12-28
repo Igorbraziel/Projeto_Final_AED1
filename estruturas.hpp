@@ -54,7 +54,7 @@ typedef struct pilha Pilha;
 Estoque * CriarEstoque();
 Fila * CriarFila();
 Pilha * CriarPilha();
-Produto * CriarProduto(int codigo, int quantidade, char nome[TAM_MAX]);
+Produto * CriarProduto(int codigo, int quantidade, char * nome);
 Pedido * CriarPedido(int numero, int quantidade_pedidos);
 
 // Destruição //===================================================================================
@@ -68,10 +68,18 @@ void DestruirPedido(Pedido * ped);
 // Funções para adição, remoção, em estruturas, etc. // ===========================================
 
 bool AdicionarEstoque(Estoque * est, Produto * prod);
+void MostrarProduto(Produto * p);
+void MostrarEstoque(Estoque * est);
+Produto * MaquinaProdutos();
+bool AtendePedido(Estoque * est, Fila * f, Pedido * ped);
+bool RemoverEstoque(Estoque * est, Produto * prod);
+bool AdicionarPedido(Fila * f, Pedido * ped);
+bool RemoverPedido(Fila * f, Pedido * ped);
 
 //Funções adicionais //============================================================================
 
 void CopiaString(char * original, char * copia);
+void LeString(char * string);
 
 //=================================================================================================
 

@@ -5,12 +5,28 @@
 
 // Funções adicionais //===================================================================================
 void CopiaString(char * original, char * copia){
-    int i;
+    int i = 0;
 
     while(original[i] != '\0' && i < TAM_MAX){
         copia[i] = original[i];
         i++;
     }
+
+}
+
+void LeString(char * string){
+    char c = 'a';
+    int i = 0;
+
+    while(true){
+        if(i == TAM_MAX) break;
+        scanf("%c", &c);
+        if(c == '\n') break;
+        string[i] = c;
+        i++;
+    }
+
+    string[i] = '\0';
 }
 //===================================================================================
 
@@ -42,7 +58,7 @@ Pilha * CriarPilha(){
     return p;
 }
 
-Produto * CriarProduto(int codigo, int quantidade, char nome[TAM_MAX]){
+Produto * CriarProduto(int codigo, int quantidade, char * nome){
     Produto * prod = NULL;
     prod = (Produto *) malloc(1 * sizeof(Produto));
     prod->codigo = codigo;
@@ -130,28 +146,128 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
         return SUCESSO;
     } else{
         Produto * atual = est->primeiro;
+        if(atual->codigo >= prod->codigo){
+            prod->proximo = atual;
+            atual->anterior = prod;
+            est->primeiro = prod;
+            (est->tamanho)++;
+            return SUCESSO;
+        }
         while(true){
-            if(atual->proximo->codigo >= prod->codigo){
+            if(atual->codigo >= prod->codigo){
                 break;
             }
-            atual = atual->proximo;
             if(atual->proximo == NULL){
                 atual->proximo = prod;
                 prod->anterior = atual;
                 (est->tamanho)++;
                 return SUCESSO;
             }
+            atual = atual->proximo;
         }
-        Produto * posterior = atual->proximo;
-        atual->proximo = prod;
-        prod->anterior = atual;
-        prod->proximo = posterior;
-        posterior->anterior = prod;
+        Produto * anterior = atual->anterior;
+        anterior->proximo = prod;
+        prod->anterior = anterior;
+        atual->anterior = prod;
+        prod->proximo = atual;
         (est->tamanho)++;
         return SUCESSO;
     }
 
     return FALHA;
 }
+
+void MostrarProduto(Produto * p){
+    if(p == NULL) return;
+
+    std::cout << "Codigo do produto: " << p->codigo << std::endl;
+    std::cout << "Quantidade do produto no estoque: " << p->quantidade << std::endl;
+    std::cout << "Nome do produto: " << p->nome << std::endl;
+    std::cout << "=================================================================" << std::endl;
+}
+
+void MostrarEstoque(Estoque * est){
+    if(est == NULL) return;
+
+    Produto * atual = est->primeiro;
+    while(atual != NULL){
+        MostrarProduto(atual);
+        atual = atual->proximo;
+    }
+}
+
+Produto * MaquinaProdutos(){
+    int codigo, quantidade;
+    char nome[TAM_MAX];
+    Produto * p = NULL;
+    std::cout << "Digite um codigo para seu produto: ";
+    std::cin >> codigo;
+    std::cout << "Digite a quantidade deste produto: ";
+    scanf("%d%*c", &quantidade);
+    std::cout << "Digite um nome para seu produto: ";
+    LeString(nome);
+    p = CriarProduto(codigo, quantidade, nome);
+    return p;
+}
+
+bool AdicionarPedido(Fila * f, Pedido * ped);
+bool RemoverPedido(Fila * f, Pedido * ped);
+
+bool RemoverEstoque(Estoque * est, Produto * prod){
+    if(est == NULL || prod == NULL) return FALHA;
+    Produto * atual = est->primeiro;
+    if(atual == NULL) return FALHA;
+    if(atual->codigo == prod->codigo){
+        est->primeiro = est->primeiro->proximo;
+        free(atual);
+        (est->tamanho)--;
+        return SUCESSO;
+    } else{
+        while(true){
+            if(atual->codigo == prod->codigo){
+                if(atual->proximo == NULL){
+                    atual->anterior->proximo = NULL;
+                    free(atual);
+                    (est->tamanho)--;
+                    return SUCESSO;
+                } else{
+                    Produto * anterior = atual->anterior;
+                    Produto * posterior = atual->proximo;
+                    anterior->proximo = posterior;
+                    posterior->anterior = anterior;
+                    free(atual);
+                    (est->tamanho)--;
+                    return SUCESSO;
+                }
+            }
+            if(atual->proximo == NULL) break;
+            atual = atual->proximo;
+        }
+    }
+
+    return FALHA;
+}
+
+bool AtendePedido(Estoque * est, Fila * f, Pedido * ped){
+    if(est == NULL || ped == NULL) return FALHA;
+    Produto * atual = est->primeiro;
+    if(atual == NULL) return FALHA;
+    while(true){
+        if(atual->codigo == ped->numero){
+            if(atual->quantidade >= ped->quantidade_pedidos){
+                atual->quantidade -= ped->quantidade_pedidos;
+                RemoverPedido(f, ped);
+                if(atual->quantidade == 0) RemoverEstoque(est, atual);
+                return SUCESSO;
+            } else return FALHA;
+         }
+         if(atual->proximo == NULL) break;
+         atual = atual->proximo;
+    }
+
+    return FALHA;
+}
+
+
 
 //===================================================================================
