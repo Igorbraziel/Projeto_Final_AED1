@@ -20,5 +20,4 @@ Visualizar a lista de pedidos pendentes.
 Visualizar os itens devolvidos recentemente.
 Além disso, você pode adicionar recursos adicionais, como:
 
-Rastreamento de produtos (quando foi adicionado, quando foi vendido, etc.).
-Priorização de pedidos com base na urgência ou tipo de produto.
+Rastreamento de produtos (quando foi adicionado, quando foi vendido, etc.)

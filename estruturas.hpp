@@ -67,14 +67,26 @@ void DestruirPedido(Pedido * ped);
 
 // Funções para adição, remoção, em estruturas, etc. // ===========================================
 
-bool AdicionarEstoque(Estoque * est, Produto * prod);
 void MostrarProduto(Produto * p);
 void MostrarEstoque(Estoque * est);
-Produto * MaquinaProdutos();
-bool AtendePedido(Estoque * est, Fila * f, Pedido * ped);
+
+void MostrarPedido(Pedido * ped);
+void MostrarFila(Fila * f);
+
+void MostrarPilha(Pilha * pi);
+
+bool AdicionarEstoque(Estoque * est, Produto * prod);
 bool RemoverEstoque(Estoque * est, Produto * prod);
-bool AdicionarPedido(Fila * f, Pedido * ped);
-bool RemoverPedido(Fila * f, Pedido * ped);
+
+bool AtendePedidoFila(Estoque * est, Fila * f);
+bool AdicionarPedidoFinal(Fila * f, Pedido * ped);
+bool RemoverPedidoInicio(Fila * f);
+
+bool AdicionarProdutoPilha(Pilha * pi, Produto * prod);
+bool RemoverProdutoPilha(Pilha * pi);
+bool ReabastecerEstoque(Estoque * est, Pilha * pi);
+
+Produto * MaquinaProdutos();
 
 //Funções adicionais //============================================================================
 

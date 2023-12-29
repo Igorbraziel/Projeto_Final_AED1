@@ -210,8 +210,41 @@ Produto * MaquinaProdutos(){
     return p;
 }
 
-bool AdicionarPedido(Fila * f, Pedido * ped);
-bool RemoverPedido(Fila * f, Pedido * ped);
+bool AdicionarPedidoFinal(Fila * f, Pedido * ped){
+    if(f == NULL || ped == NULL) return FALHA;
+    if(f->primeiro == NULL){
+        f->primeiro = ped;
+        (f->tamanho)++;
+        return SUCESSO;
+    } else{
+        Pedido * atual = f->primeiro;
+        while(atual->proximo != NULL){
+            atual = atual->proximo;
+        }
+        atual->proximo = ped;
+        ped->anterior = atual;
+        (f->tamanho)++;
+        return SUCESSO;
+    }
+
+    return FALHA;
+}
+
+bool RemoverPedidoInicio(Fila * f){
+    if(f == NULL) return FALHA;
+    if(f->primeiro == NULL){
+        return FALHA;
+    } else{
+        Pedido * removido = f->primeiro;
+        f->primeiro = f->primeiro->proximo;
+        f->primeiro->anterior = NULL;
+        free(removido);
+        (f->tamanho)--;
+        return SUCESSO;
+    }
+
+    return FALHA;
+}
 
 bool RemoverEstoque(Estoque * est, Produto * prod){
     if(est == NULL || prod == NULL) return FALHA;
@@ -248,7 +281,8 @@ bool RemoverEstoque(Estoque * est, Produto * prod){
     return FALHA;
 }
 
-bool AtendePedido(Estoque * est, Fila * f, Pedido * ped){
+bool AtendePedidoFila(Estoque * est, Fila * f){
+    Pedido * ped = f->primeiro;
     if(est == NULL || ped == NULL) return FALHA;
     Produto * atual = est->primeiro;
     if(atual == NULL) return FALHA;
@@ -256,7 +290,7 @@ bool AtendePedido(Estoque * est, Fila * f, Pedido * ped){
         if(atual->codigo == ped->numero){
             if(atual->quantidade >= ped->quantidade_pedidos){
                 atual->quantidade -= ped->quantidade_pedidos;
-                RemoverPedido(f, ped);
+                RemoverPedidoInicio(f);
                 if(atual->quantidade == 0) RemoverEstoque(est, atual);
                 return SUCESSO;
             } else return FALHA;
@@ -268,6 +302,79 @@ bool AtendePedido(Estoque * est, Fila * f, Pedido * ped){
     return FALHA;
 }
 
+bool AdicionarProdutoPilha(Pilha * pi, Produto * prod){
+    if(pi == NULL || prod == NULL) return FALHA;
+    if(pi->ultimo == NULL){
+        pi->ultimo = prod;
+        (pi->tamanho)++;
+        return SUCESSO;
+    } else{
+        Produto * anterior = pi->ultimo; 
+        anterior->proximo = prod;
+        prod->anterior = anterior;
+        pi->ultimo = prod;
+        (pi->tamanho)++;
+        return SUCESSO;
+    }
+
+    return FALHA;
+}
+
+bool RemoverProdutoPilha(Pilha * pi){
+    if(pi == NULL) return FALHA;
+    if(pi->ultimo == NULL){
+        return FALHA;
+    } else if(pi->ultimo->proximo == NULL){
+        free(pi->ultimo);
+        pi->ultimo = NULL;
+        (pi->tamanho)--;
+    } else{
+        Produto * ultimo = pi->ultimo;
+        Produto * anterior = pi->ultimo->anterior;
+        anterior->proximo = NULL;
+        pi->ultimo = anterior;
+        free(ultimo); 
+        (pi->tamanho)--;
+        return SUCESSO;
+    }
+
+    return FALHA;
+}
+
+bool ReabastecerEstoque(Estoque * est, Pilha * pi){
+    if(est == NULL || pi == NULL) return FALHA;
+    while(pi->ultimo != NULL && pi->tamanho > 0){
+        AdicionarEstoque(est, pi->ultimo);
+        RemoverProdutoPilha(pi);
+    }
+
+    return SUCESSO;
+}
+
+void MostrarPedido(Pedido * ped){
+    if(ped == NULL) return;
+    std::cout << "O numero do seu pedido e: " << ped->numero << std::endl;
+    std::cout << "A quantidade do pedido foi de: " << ped->quantidade_pedidos << std::endl;
+    std::cout << "=================================================================" << std::endl;
+}
+
+void MostrarFila(Fila * f){
+    if(f == NULL) return;
+    Pedido * atual = f->primeiro;
+    while(atual != NULL){
+        MostrarPedido(atual);
+        atual = atual->proximo;
+    }
+}
+
+void MostrarPilha(Pilha * pi){
+    if(pi == NULL) return;
+    Produto * atual = pi->ultimo;
+    while(atual != NULL){
+        MostrarProduto(atual);
+        atual = atual->proximo;
+    }
+}
 
 
 //===================================================================================
