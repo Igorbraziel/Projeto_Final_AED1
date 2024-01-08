@@ -12,6 +12,8 @@ int main(){
         AdicionarEstoque(est, p);
     }
 
+    std::cout << FUNDO_VERMELHO;
+
     MostrarEstoque(est);
 
     DestruirEstoque(est);
