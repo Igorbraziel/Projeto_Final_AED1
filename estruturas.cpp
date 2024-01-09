@@ -182,6 +182,48 @@ void MostrarProduto(Produto * p){
 
 void MostrarEstoque(Estoque * est){
     if(est == NULL) return;
+    char borda = '#';
+    int i;
+
+    //introduçao ====================================================
+
+    for(i = 0; i < 60; i++){
+        std::cout << VERDE;
+        std::cout << borda;
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 24; i++){
+        if(i == 0 || i == 1 || i == 2){
+            std::cout << "#";
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << VERMELHO << "ESTOQUE ATUAL";
+
+    for(i = 0; i < 23; i++){
+        if(i + 2 == 22 || i + 1 == 22 || i == 22){
+            std::cout << VERDE;
+            std::cout << "#";
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 60; i++){
+        std::cout << borda;
+    }
+
+    std::cout << LIMPA;
+
+    std::cout << "\n\n";
+
+    //==========================================================
 
     Produto * atual = est->primeiro;
     while(atual != NULL){
@@ -287,7 +329,10 @@ bool AtendePedidoFila(Estoque * est, Fila * f){
                 RemoverPedidoInicio(f);
                 if(atual->quantidade == 0) RemoverEstoque(est, atual);
                 return SUCESSO;
-            } else return FALHA;
+            } else {
+                RemoverPedidoInicio(f);
+                return FALHA;
+            }
          }
          if(atual->proximo == NULL) break;
          atual = atual->proximo;

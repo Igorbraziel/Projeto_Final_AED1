@@ -9,6 +9,7 @@
 //cores //==============================================
 
 #define LIMPA "\033[0m"
+#define LIMPA_FUNDO "\033[49m"
 
 #define BRANCO "\033[1;30m"
 #define VERMELHO "\033[1;31m"
