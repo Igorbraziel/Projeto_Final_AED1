@@ -2,17 +2,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 
 // Funções adicionais //===================================================================================
-void CopiaString(char * original, char * copia){
-    int i = 0;
-
-    while(original[i] != '\0' && i < TAM_MAX){
-        copia[i] = original[i];
-        i++;
-    }
-
-}
 
 void LeString(char * string){
     char c = 'a';
@@ -63,7 +55,7 @@ Produto * CriarProduto(int codigo, int quantidade, char * nome){
     prod = (Produto *) malloc(1 * sizeof(Produto));
     prod->codigo = codigo;
     prod->quantidade = quantidade;
-    CopiaString(nome, prod->nome);
+    strcpy(prod->nome, nome);
     prod->anterior = NULL;
     prod->proximo = NULL;
 
@@ -146,7 +138,7 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
         return SUCESSO;
     } else{
         Produto * atual = est->primeiro;
-        if(atual->codigo >= prod->codigo){
+        if(atual->codigo > prod->codigo){
             prod->proximo = atual;
             atual->anterior = prod;
             est->primeiro = prod;
@@ -154,8 +146,10 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
             return SUCESSO;
         }
         while(true){
-            if(atual->codigo >= prod->codigo){
+            if(atual->codigo > prod->codigo){
                 break;
+            } else if(atual->codigo == prod->codigo){
+                return FALHA;
             }
             if(atual->proximo == NULL){
                 atual->proximo = prod;

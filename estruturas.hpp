@@ -113,7 +113,6 @@ Produto * MaquinaProdutos();
 
 //Funções adicionais //============================================================================
 
-void CopiaString(char * original, char * copia);
 void LeString(char * string);
 
 //=================================================================================================

@@ -1,18 +1,29 @@
 #include "estruturas.hpp"
 #include <iostream>
 #include <stdlib.h>
+#include <cstring>
 
 int main(){
     Estoque * est = CriarEstoque();
-    Produto * p = NULL;
-    int i;
+    char nome[TAM_MAX];
 
-    for(i = 0; i < 3; i++){
-        p = MaquinaProdutos();
-        AdicionarEstoque(est, p);
-    }
+    strcpy(nome, "Laranja");
+    AdicionarEstoque(est, CriarProduto(1, 56, nome));
 
-    std::cout << FUNDO_VERMELHO;
+    strcpy(nome, "erro");
+    AdicionarEstoque(est, CriarProduto(1, 6, nome));
+
+    strcpy(nome, "Melancia");
+    AdicionarEstoque(est, CriarProduto(13, 102, nome));
+
+    strcpy(nome, "Uva");
+    AdicionarEstoque(est, CriarProduto(4, 76, nome));
+
+    strcpy(nome, "Abacate");
+    AdicionarEstoque(est, CriarProduto(16, 203, nome));
+
+    strcpy(nome, "Chocolate");
+    AdicionarEstoque(est, CriarProduto(22, 534, nome));
 
     MostrarEstoque(est);
 
