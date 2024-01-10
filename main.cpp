@@ -5,6 +5,7 @@
 
 int main(){
     Estoque * est = CriarEstoque();
+    Fila * fila_pedidos = CriarFila();
     char nome[TAM_MAX];
 
     // inicialização do estoque ==================
@@ -40,9 +41,23 @@ int main(){
     AdicionarEstoque(est, CriarProduto(102, 314, nome));
 
     // =============================================
+    // inicialização pedidos
+
+    AdicionarPedidoFinal(fila_pedidos, CriarPedido(34, 200));
+    AdicionarPedidoFinal(fila_pedidos, CriarPedido(102, 314));
+
+
+    // =============================================
+
+    MostrarFila(fila_pedidos);
+    AtendePedidoFila(est, fila_pedidos);
+    AtendePedidoFila(est, fila_pedidos);
+    LinhaVerde();
     MostrarEstoque(est);
 
+
     DestruirEstoque(est);
+    DestruirFila(fila_pedidos);
     
     return 0;
 }

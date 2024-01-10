@@ -97,6 +97,12 @@ void MostrarEstoque(Estoque * est);
 void MostrarPedido(Pedido * ped);
 void MostrarFila(Fila * f);
 
+void IntroducaoEstoque(int tam, const char borda);
+void IntroducaoFila(int tam, const char borda);
+void IntroducaoPilha(int tam, const char borda);
+
+void LinhaVerde();
+
 void MostrarPilha(Pilha * pi);
 
 bool AdicionarEstoque(Estoque * est, Produto * prod);

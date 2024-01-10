@@ -173,22 +173,30 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
 
 void MostrarProduto(Produto * p){
     if(p == NULL) return;
+    int i;
 
-    std::cout << "Codigo do produto: " << p->codigo << std::endl;
-    std::cout << "Quantidade do produto no estoque: " << p->quantidade << std::endl;
-    std::cout << "Nome do produto: " << p->nome << std::endl;
-    std::cout << "=================================================================" << std::endl;
+    std::cout << LIMPA;
+
+    std::cout << FUNDO_BRANCO << "Codigo do produto: " << p->codigo << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Quantidade do produto no estoque: " << p->quantidade << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO <<"Nome do produto: " << p->nome << LIMPA_FUNDO << std::endl;
+    
+    std::cout << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << LIMPA << std::endl;
 }
 
-void MostrarEstoque(Estoque * est){
-    if(est == NULL) return;
-    char borda = '#';
+void IntroducaoEstoque(int tam, const char borda){
     int i;
 
     //introduçao ====================================================
 
     for(i = 0; i < 60; i++){
-        std::cout << VERDE;
+        std::cout << CIANO;
         std::cout << borda;
     }
 
@@ -196,7 +204,7 @@ void MostrarEstoque(Estoque * est){
 
     for(i = 0; i < 24; i++){
         if(i == 0 || i == 1 || i == 2){
-            std::cout << "#";
+            std::cout << borda;
         } else{
             std::cout << " ";
         }
@@ -206,8 +214,8 @@ void MostrarEstoque(Estoque * est){
 
     for(i = 0; i < 23; i++){
         if(i + 2 == 22 || i + 1 == 22 || i == 22){
-            std::cout << VERDE;
-            std::cout << "#";
+            std::cout << CIANO;
+            std::cout << borda;
         } else{
             std::cout << " ";
         }
@@ -219,11 +227,86 @@ void MostrarEstoque(Estoque * est){
         std::cout << borda;
     }
 
-    std::cout << LIMPA;
+    std::cout << "\n" << MAGENTA;
 
-    std::cout << "\n\n";
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << CIANO << "\n-- NUMERO DE PRODUTOS DIFERENTES: " << tam << " --" << LIMPA << "\n";
+
+    std::cout << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << "\n";
 
     //==========================================================
+}
+
+void IntroducaoFila(int tam, const char borda){
+    int i;
+
+    //introduçao ====================================================
+
+    for(i = 0; i < 60; i++){
+        std::cout << CIANO;
+        std::cout << borda;
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 22; i++){
+        if(i == 0 || i == 1 || i == 2){
+            std::cout << borda;
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << VERMELHO << "LISTA DE PEDIDOS";
+
+    for(i = 0; i < 22; i++){
+        if(i + 2 == 21 || i + 1 == 21 || i == 21){
+            std::cout << CIANO;
+            std::cout << borda;
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 60; i++){
+        std::cout << borda;
+    }
+
+    std::cout << "\n" << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << CIANO << "\n-- NUMERO DE PEDIDOS DIFERENTES: " << tam << " --" << LIMPA << "\n";
+
+    std::cout << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << "\n";
+
+    //==========================================================
+}
+void IntroducaoPilha(int tam, const char borda);
+
+void MostrarEstoque(Estoque * est){
+    if(est == NULL) return;
+
+    IntroducaoEstoque(est->tamanho, '#');
 
     Produto * atual = est->primeiro;
     while(atual != NULL){
@@ -273,7 +356,9 @@ bool RemoverPedidoInicio(Fila * f){
     } else{
         Pedido * removido = f->primeiro;
         f->primeiro = f->primeiro->proximo;
-        f->primeiro->anterior = NULL;
+        if(f->primeiro != NULL){ 
+            f->primeiro->anterior = NULL;
+        }
         free(removido);
         (f->tamanho)--;
         return SUCESSO;
@@ -338,6 +423,7 @@ bool AtendePedidoFila(Estoque * est, Fila * f){
          atual = atual->proximo;
     }
 
+    RemoverPedidoInicio(f);
     return FALHA;
 }
 
@@ -392,18 +478,44 @@ bool ReabastecerEstoque(Estoque * est, Pilha * pi){
 
 void MostrarPedido(Pedido * ped){
     if(ped == NULL) return;
-    std::cout << "O numero do seu pedido e: " << ped->numero << std::endl;
-    std::cout << "A quantidade do pedido foi de: " << ped->quantidade_pedidos << std::endl;
-    std::cout << "=================================================================" << std::endl;
+    int i;
+
+    std::cout << LIMPA;
+
+    std::cout << FUNDO_BRANCO << "Codigo do pedido: " << ped->numero << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Numero de itens deste pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
+    
+    std::cout << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << LIMPA << std::endl;
 }
 
 void MostrarFila(Fila * f){
     if(f == NULL) return;
+
+    IntroducaoFila(f->tamanho, '@');
+
     Pedido * atual = f->primeiro;
+
     while(atual != NULL){
         MostrarPedido(atual);
         atual = atual->proximo;
     }
+}
+
+void LinhaVerde(){
+    int i;
+    std::cout << "\n" << VERDE;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "X";
+    }
+
+    std::cout << LIMPA << "\n" << std::endl;
 }
 
 void MostrarPilha(Pilha * pi){
