@@ -51,7 +51,7 @@ struct estoque{
 typedef struct estoque Estoque;
 
 struct pedido{
-    int numero; // numero referente ao código do produto que vai ser pedido
+    char nome[TAM_MAX]; // numero referente ao código do produto que vai ser pedido
     int quantidade_pedidos; // quantidade solicitada daquele tipo de produto referente ao número
     struct pedido * proximo;
     struct pedido * anterior;
@@ -79,7 +79,7 @@ Estoque * CriarEstoque();
 Fila * CriarFila();
 Pilha * CriarPilha();
 Produto * CriarProduto(int codigo, int quantidade, char * nome);
-Pedido * CriarPedido(int numero, int quantidade_pedidos);
+Pedido * CriarPedido(char * nome, int quantidade_pedidos);
 
 // Destruição //===================================================================================
 
