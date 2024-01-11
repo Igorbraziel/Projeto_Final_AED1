@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <cstring>
 
 // Funções adicionais //===================================================================================
@@ -62,10 +63,10 @@ Produto * CriarProduto(int codigo, int quantidade, char * nome){
     return prod;
 }
 
-Pedido * CriarPedido(int numero, int quantidade_pedidos){
+Pedido * CriarPedido(char * nome, int quantidade_pedidos){
     Pedido * ped = NULL;
     ped = (Pedido *) malloc(1 * sizeof(Pedido));
-    ped->numero = numero;
+    strcpy(ped->nome, nome);
     ped->quantidade_pedidos = quantidade_pedidos;
     ped->anterior = NULL;
     ped->proximo = NULL;
@@ -384,16 +385,17 @@ Produto * MaquinaProdutos(){
 }
 
 Pedido * MaquinaPedidos(){
-    int codigo, quantidade;
+    int quantidade;
+    char nome[TAM_MAX];
 
     Pedido * ped = NULL;
 
-    std::cout << "Digite o codigo do produto desejado: ";
-    std::cin >> codigo;
     std::cout << "Digite a quantidade desejada do produto: ";
     scanf("%d%*c", &quantidade);
+    std::cout << "Digite o nome do produto desejado: ";
+    LeString(nome);
 
-    ped = CriarPedido(codigo, quantidade);
+    ped = CriarPedido(nome, quantidade);
 
     return ped;
 }
@@ -477,13 +479,15 @@ bool AtendePedidoFila(Estoque * est, Fila * f){
     Produto * atual = est->primeiro;
     if(atual == NULL) return FALHA;
     while(true){
-        if(atual->codigo == ped->numero){
+        if(strcmp(atual->nome, ped->nome) == 0){
             if(atual->quantidade >= ped->quantidade_pedidos){
                 atual->quantidade -= ped->quantidade_pedidos;
                 RemoverPedidoInicio(f);
                 if(atual->quantidade == 0) RemoverEstoque(est, atual);
                 return SUCESSO;
             } else {
+                std::cout << "IMPOSSIVEL ATENDER O PEDIDO, TEMOS " << atual->quantidade << "ITENS DE (" << atual->nome;
+                std::cout << ") E FORAM SOLICITADOS" << ped->quantidade_pedidos << "ITENS, O PEDIDO SERA EXCLUIDO!\n";
                 RemoverPedidoInicio(f);
                 return FALHA;
             }
@@ -548,10 +552,11 @@ bool ReabastecerEstoque(Estoque * est, Pilha * pi){
 void MostrarPedido(Pedido * ped){
     if(ped == NULL) return;
     int i;
+    char nome[TAM_MAX];
 
     std::cout << LIMPA;
 
-    std::cout << FUNDO_BRANCO << "Codigo do pedido: " << ped->numero << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Nome do item do pedido: " << ped->nome<< LIMPA_FUNDO << std::endl;
     std::cout << FUNDO_BRANCO << "Numero de itens deste pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
     
     std::cout << MAGENTA;
