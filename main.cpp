@@ -2,14 +2,17 @@
 #include <iostream>
 #include <stdlib.h>
 #include <cstring>
+#include <unistd.h>
 
 int main(){
     Estoque * est = CriarEstoque();
     Fila * fila_pedidos = CriarFila();
+    Pilha * pilha_devolucao = CriarPilha();
     char nome[TAM_MAX];
+    int opcao;
 
     // inicialização do estoque ==================
-
+    /*
     strcpy(nome, "Laranja");
     AdicionarEstoque(est, CriarProduto(1, 56, nome));
 
@@ -40,24 +43,80 @@ int main(){
     strcpy(nome, "Fanta");
     AdicionarEstoque(est, CriarProduto(102, 314, nome));
 
-    // =============================================
     // inicialização pedidos
 
-    AdicionarPedidoFinal(fila_pedidos, CriarPedido(34, 200));
     AdicionarPedidoFinal(fila_pedidos, CriarPedido(102, 314));
+    AdicionarPedidoFinal(fila_pedidos, CriarPedido(34, 200));
 
+    // inicialização devolucoes
+
+    strcpy(nome, "Pirulito");
+    AdicionarProdutoPilha(pilha_devolucao, CriarProduto(104, 203, nome));
+
+    strcpy(nome, "Chiclete");
+    AdicionarProdutoPilha(pilha_devolucao, CriarProduto(111, 453, nome));
 
     // =============================================
 
-    MostrarFila(fila_pedidos);
-    AtendePedidoFila(est, fila_pedidos);
-    AtendePedidoFila(est, fila_pedidos);
-    LinhaVerde();
-    MostrarEstoque(est);
+    */
 
+    while(true){
+        std::cout << VERMELHO << FUNDO_CINZA << "CENTRAL DE GERENCIAMENTO" << LIMPA_FUNDO << "\n\n";
+        std::cout << CIANO << "[1] -" << LIMPA << "(Adicionar Produto ao Estoque)\n";
+        std::cout << CIANO << "[2] -" << LIMPA << "(Adicionar Pedido na Fila)\n";
+        std::cout << CIANO << "[3] -" << LIMPA << "(Devolver Produto para a Pilha de itens)\n";
+        std::cout << CIANO << "[4] -" << LIMPA << "(Atender Pedido da Fila)\n";
+        std::cout << CIANO << "[5] -" << LIMPA << "(Reabastecer Estoque com Itens da Pilha)\n";
+        std::cout << CIANO << "[6] -" << LIMPA << "(Visualizar Estoque)\n";
+        std::cout << CIANO << "[7] -" << LIMPA << "(Visualizar Fila de Pedidos)\n";
+        std::cout << CIANO << "[8] -" << LIMPA << "(Visualizar Pilha de Itens)\n";
+        std::cout << CIANO << "[9] -" << LIMPA << "(Finalizar o Programa)\n\n";
+        std::cout << AZUL << "Digite o número da opção desejada: " << LIMPA;
+        std::cin >> opcao;
+        std::cout << "\n";
+
+        if(opcao == 1){
+            AdicionarEstoque(est, MaquinaProdutos());
+            sleep(3);
+            std::cout << "\n";
+        } else if (opcao == 2){
+            AdicionarPedidoFinal(fila_pedidos, MaquinaPedidos());
+            sleep(3);
+            std::cout << "\n";
+        } else if (opcao == 3){
+            AdicionarProdutoPilha(pilha_devolucao, MaquinaProdutos());
+            sleep(3);
+            std::cout << "\n";
+        } else if (opcao == 4){
+            AtendePedidoFila(est, fila_pedidos);
+            sleep(3);
+            std::cout << "\n";
+        } else if (opcao == 5){
+            ReabastecerEstoque(est, pilha_devolucao); // ESTÁ TENDO FALHAS
+            sleep(3);
+            std::cout << "\n";
+        } else if (opcao == 6){
+            MostrarEstoque(est);
+            sleep(3);
+        } else if (opcao == 7){
+            MostrarFila(fila_pedidos);
+            sleep(3);
+        } else if (opcao == 8){
+            MostrarPilha(pilha_devolucao);
+            sleep(3);
+        } else if (opcao == 9){
+            std::cout << FUNDO_MAGENTA << "VOLTE SEMPRE !!!" << LIMPA_FUNDO << "\n\n";
+            sleep(3);
+            break;
+        } else{
+            std::cout << VERMELHO << "OPÇÃO NÃO DISPONÍVEL\n\n" << LIMPA;
+            sleep(3);
+        }
+    }
 
     DestruirEstoque(est);
     DestruirFila(fila_pedidos);
+    DestruirPilha(pilha_devolucao);
     
     return 0;
 }

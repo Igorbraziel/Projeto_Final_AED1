@@ -117,6 +117,7 @@ bool RemoverProdutoPilha(Pilha * pi);
 bool ReabastecerEstoque(Estoque * est, Pilha * pi);
 
 Produto * MaquinaProdutos();
+Pedido * MaquinaPedidos();
 
 //Funções adicionais //============================================================================
 

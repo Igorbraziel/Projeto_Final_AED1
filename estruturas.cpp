@@ -301,7 +301,61 @@ void IntroducaoFila(int tam, const char borda){
 
     //==========================================================
 }
-void IntroducaoPilha(int tam, const char borda);
+void IntroducaoPilha(int tam, const char borda){
+     int i;
+
+    //introduçao ====================================================
+
+    for(i = 0; i < 60; i++){
+        std::cout << CIANO;
+        std::cout << borda;
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 22; i++){
+        if(i == 0 || i == 1 || i == 2){
+            std::cout << borda;
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << VERMELHO << "ITENS DEVOLVIDOS";
+
+    for(i = 0; i < 22; i++){
+        if(i + 2 == 21 || i + 1 == 21 || i == 21){
+            std::cout << CIANO;
+            std::cout << borda;
+        } else{
+            std::cout << " ";
+        }
+    }
+
+    std::cout << "\n";
+
+    for(i = 0; i < 60; i++){
+        std::cout << borda;
+    }
+
+    std::cout << "\n" << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << CIANO << "\n-- NUMERO DE PRODUTOS DEVOLVIDOS: " << tam << " --" << LIMPA << "\n";
+
+    std::cout << MAGENTA;
+
+    for(i = 0; i < 60; i++){
+        std::cout << "=";
+    }
+
+    std::cout << "\n";
+
+    //==========================================================
+}
 
 void MostrarEstoque(Estoque * est){
     if(est == NULL) return;
@@ -327,6 +381,21 @@ Produto * MaquinaProdutos(){
     LeString(nome);
     p = CriarProduto(codigo, quantidade, nome);
     return p;
+}
+
+Pedido * MaquinaPedidos(){
+    int codigo, quantidade;
+
+    Pedido * ped = NULL;
+
+    std::cout << "Digite o codigo do produto desejado: ";
+    std::cin >> codigo;
+    std::cout << "Digite a quantidade desejada do produto: ";
+    scanf("%d%*c", &quantidade);
+
+    ped = CriarPedido(codigo, quantidade);
+
+    return ped;
 }
 
 bool AdicionarPedidoFinal(Fila * f, Pedido * ped){
@@ -468,10 +537,10 @@ bool RemoverProdutoPilha(Pilha * pi){
 
 bool ReabastecerEstoque(Estoque * est, Pilha * pi){
     if(est == NULL || pi == NULL) return FALHA;
-    while(pi->ultimo != NULL && pi->tamanho > 0){
-        AdicionarEstoque(est, pi->ultimo);
-        RemoverProdutoPilha(pi);
-    }
+    //while(pi->ultimo != NULL && pi->tamanho > 0){
+    AdicionarEstoque(est, pi->ultimo);
+    RemoverProdutoPilha(pi);
+    //}
 
     return SUCESSO;
 }
@@ -520,10 +589,14 @@ void LinhaVerde(){
 
 void MostrarPilha(Pilha * pi){
     if(pi == NULL) return;
+
+    IntroducaoPilha(pi->tamanho, '~');
+
     Produto * atual = pi->ultimo;
+
     while(atual != NULL){
         MostrarProduto(atual);
-        atual = atual->proximo;
+        atual = atual->anterior;
     }
 }
 
