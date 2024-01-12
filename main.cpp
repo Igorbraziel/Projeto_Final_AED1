@@ -64,7 +64,7 @@ int main(){
         std::cout << VERMELHO << FUNDO_CINZA << "CENTRAL DE GERENCIAMENTO" << LIMPA_FUNDO << "\n\n";
         std::cout << CIANO << "[1] -" << LIMPA << "(Adicionar Produto ao Estoque)\n";
         std::cout << CIANO << "[2] -" << LIMPA << "(Adicionar Pedido na Fila)\n";
-        std::cout << CIANO << "[3] -" << LIMPA << "(Devolver Produto para a Pilha de itens)\n";
+        std::cout << CIANO << "[3] -" << LIMPA << "(Adicionar Produto na Pilha de Reabastecimento)\n";
         std::cout << CIANO << "[4] -" << LIMPA << "(Atender Pedido da Fila)\n";
         std::cout << CIANO << "[5] -" << LIMPA << "(Reabastecer Estoque com Itens da Pilha)\n";
         std::cout << CIANO << "[6] -" << LIMPA << "(Visualizar Estoque)\n";

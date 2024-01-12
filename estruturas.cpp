@@ -139,7 +139,7 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
         return SUCESSO;
     } else{
         Produto * atual = est->primeiro;
-        if(atual->codigo > prod->codigo){
+        if(strcmp(atual->nome, prod->nome) > 0){
             prod->proximo = atual;
             atual->anterior = prod;
             est->primeiro = prod;
@@ -147,10 +147,11 @@ bool AdicionarEstoque(Estoque * est, Produto * prod){
             return SUCESSO;
         }
         while(true){
-            if(atual->codigo > prod->codigo){
+            if(strcmp(atual->nome, prod->nome) > 0){
                 break;
-            } else if(atual->codigo == prod->codigo){
-                return FALHA;
+            } else if(strcmp(atual->nome, prod->nome) == 0){
+                atual->quantidade += prod->quantidade;
+                return SUCESSO;
             }
             if(atual->proximo == NULL){
                 atual->proximo = prod;
@@ -180,7 +181,7 @@ void MostrarProduto(Produto * p){
 
     std::cout << FUNDO_BRANCO << "Codigo do produto: " << p->codigo << LIMPA_FUNDO << std::endl;
     std::cout << FUNDO_BRANCO << "Quantidade do produto no estoque: " << p->quantidade << LIMPA_FUNDO << std::endl;
-    std::cout << FUNDO_BRANCO <<"Nome do produto: " << p->nome << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Nome do produto: " << p->nome << LIMPA_FUNDO << std::endl;
     
     std::cout << MAGENTA;
 
@@ -314,7 +315,7 @@ void IntroducaoPilha(int tam, const char borda){
 
     std::cout << "\n";
 
-    for(i = 0; i < 22; i++){
+    for(i = 0; i < 17; i++){
         if(i == 0 || i == 1 || i == 2){
             std::cout << borda;
         } else{
@@ -322,10 +323,10 @@ void IntroducaoPilha(int tam, const char borda){
         }
     }
 
-    std::cout << VERMELHO << "ITENS DEVOLVIDOS";
+    std::cout << VERMELHO << "PILHA DE REABASTECIMENTO";
 
-    for(i = 0; i < 22; i++){
-        if(i + 2 == 21 || i + 1 == 21 || i == 21){
+    for(i = 0; i < 18; i++){
+        if(i + 2 == 17 || i + 1 == 17 || i == 17){
             std::cout << CIANO;
             std::cout << borda;
         } else{
@@ -345,7 +346,7 @@ void IntroducaoPilha(int tam, const char borda){
         std::cout << "=";
     }
 
-    std::cout << CIANO << "\n-- NUMERO DE PRODUTOS DEVOLVIDOS: " << tam << " --" << LIMPA << "\n";
+    std::cout << CIANO << "\n-- NUMERO DE PRODUTOS NA PILHA: " << tam << " --" << LIMPA << "\n";
 
     std::cout << MAGENTA;
 
@@ -360,6 +361,10 @@ void IntroducaoPilha(int tam, const char borda){
 
 void MostrarEstoque(Estoque * est){
     if(est == NULL) return;
+    if(est->tamanho == 0){
+        std::cout << "ESTOQUE VAZIO\n\n";
+        return;
+    };
 
     IntroducaoEstoque(est->tamanho, '#');
 
@@ -442,14 +447,14 @@ bool RemoverEstoque(Estoque * est, Produto * prod){
     if(est == NULL || prod == NULL) return FALHA;
     Produto * atual = est->primeiro;
     if(atual == NULL) return FALHA;
-    if(atual->codigo == prod->codigo){
+    if(strcmp(atual->nome, prod->nome) == 0){
         est->primeiro = est->primeiro->proximo;
         free(atual);
         (est->tamanho)--;
         return SUCESSO;
     } else{
         while(true){
-            if(atual->codigo == prod->codigo){
+            if(strcmp(atual->nome, prod->nome) == 0){
                 if(atual->proximo == NULL){
                     atual->anterior->proximo = NULL;
                     free(atual);
@@ -496,6 +501,7 @@ bool AtendePedidoFila(Estoque * est, Fila * f){
          atual = atual->proximo;
     }
 
+    std::cout << "IMPOSSIVEL ATENDER O PEDIDO, PRODUTO NÃO FOI ENCONTRADO NO ESTOQUE\n";
     RemoverPedidoInicio(f);
     return FALHA;
 }
@@ -523,9 +529,11 @@ bool RemoverProdutoPilha(Pilha * pi){
     if(pi->ultimo == NULL){
         return FALHA;
     } else if(pi->ultimo->proximo == NULL){
-        free(pi->ultimo);
+        Produto * ultimo = pi->ultimo;
         pi->ultimo = NULL;
+        free(ultimo);
         (pi->tamanho)--;
+        return SUCESSO;
     } else{
         Produto * ultimo = pi->ultimo;
         Produto * anterior = pi->ultimo->anterior;
@@ -541,10 +549,15 @@ bool RemoverProdutoPilha(Pilha * pi){
 
 bool ReabastecerEstoque(Estoque * est, Pilha * pi){
     if(est == NULL || pi == NULL) return FALHA;
-    //while(pi->ultimo != NULL && pi->tamanho > 0){
-    AdicionarEstoque(est, pi->ultimo);
+    Produto * ultimo = pi->ultimo;
+    while(ultimo != NULL){
+    Produto * produto_novo = CriarProduto(ultimo->codigo, ultimo->quantidade, ultimo->nome);
+    AdicionarEstoque(est, produto_novo);
+    ultimo = ultimo->anterior;
     RemoverProdutoPilha(pi);
-    //}
+    }
+
+    pi->tamanho = 0;
 
     return SUCESSO;
 }
@@ -557,7 +570,7 @@ void MostrarPedido(Pedido * ped){
     std::cout << LIMPA;
 
     std::cout << FUNDO_BRANCO << "Nome do item do pedido: " << ped->nome<< LIMPA_FUNDO << std::endl;
-    std::cout << FUNDO_BRANCO << "Numero de itens deste pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Numero de unidades solicitadas no pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
     
     std::cout << MAGENTA;
 
@@ -570,6 +583,10 @@ void MostrarPedido(Pedido * ped){
 
 void MostrarFila(Fila * f){
     if(f == NULL) return;
+    if(f->tamanho == 0){
+        std::cout << "FILA DE PEDIDOS VAZIA\n\n";
+        return;
+    };
 
     IntroducaoFila(f->tamanho, '@');
 
@@ -594,6 +611,10 @@ void LinhaVerde(){
 
 void MostrarPilha(Pilha * pi){
     if(pi == NULL) return;
+    if(pi->tamanho == 0){
+        std::cout << "PILHA DE REABASTECIMENTO VAZIA\n\n";
+        return;
+    };
 
     IntroducaoPilha(pi->tamanho, '~');
 
