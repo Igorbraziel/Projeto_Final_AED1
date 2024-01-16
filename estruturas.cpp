@@ -51,11 +51,12 @@ Pilha * CriarPilha(){
     return p;
 }
 
-Produto * CriarProduto(int codigo, int quantidade, char * nome){
+Produto * CriarProduto(int codigo, int quantidade, char * nome, float preco){
     Produto * prod = NULL;
     prod = (Produto *) malloc(1 * sizeof(Produto));
     prod->codigo = codigo;
     prod->quantidade = quantidade;
+    prod->preco = preco;
     strcpy(prod->nome, nome);
     prod->anterior = NULL;
     prod->proximo = NULL;
@@ -179,9 +180,10 @@ void MostrarProduto(Produto * p){
 
     std::cout << LIMPA;
 
-    std::cout << FUNDO_BRANCO << "Codigo do produto: " << p->codigo << LIMPA_FUNDO << std::endl;
-    std::cout << FUNDO_BRANCO << "Quantidade do produto no estoque: " << p->quantidade << LIMPA_FUNDO << std::endl;
-    std::cout << FUNDO_BRANCO << "Nome do produto: " << p->nome << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Codigo do Produto: " << p->codigo << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Quantidade do Produto no Estoque: " << p->quantidade << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Preço do Produto: R$" << p->preco << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Nome do Produto: " << p->nome << LIMPA_FUNDO << std::endl;
     
     std::cout << MAGENTA;
 
@@ -377,15 +379,18 @@ void MostrarEstoque(Estoque * est){
 
 Produto * MaquinaProdutos(){
     int codigo, quantidade;
+    float preco;
     char nome[TAM_MAX];
     Produto * p = NULL;
     std::cout << "Digite um codigo para seu produto: ";
     std::cin >> codigo;
+    std::cout << "Digite um preço para seu produto: ";
+    std::cin >> preco;
     std::cout << "Digite a quantidade deste produto: ";
     scanf("%d%*c", &quantidade);
     std::cout << "Digite um nome para seu produto: ";
     LeString(nome);
-    p = CriarProduto(codigo, quantidade, nome);
+    p = CriarProduto(codigo, quantidade, nome, preco);
     return p;
 }
 
@@ -487,12 +492,14 @@ bool AtendePedidoFila(Estoque * est, Fila * f){
         if(strcmp(atual->nome, ped->nome) == 0){
             if(atual->quantidade >= ped->quantidade_pedidos){
                 atual->quantidade -= ped->quantidade_pedidos;
+                printf("O TOTAL GASTO COM O PEDIDO FOI DE R$%.2f\n", ped->quantidade_pedidos * atual->preco);
+                printf("SEU PEDIDO DE (%s) FOI ATENDIDO COM SUCESSO\n", atual->nome);
                 RemoverPedidoInicio(f);
                 if(atual->quantidade == 0) RemoverEstoque(est, atual);
                 return SUCESSO;
             } else {
-                std::cout << "IMPOSSIVEL ATENDER O PEDIDO, TEMOS " << atual->quantidade << "ITENS DE (" << atual->nome;
-                std::cout << ") E FORAM SOLICITADOS" << ped->quantidade_pedidos << "ITENS, O PEDIDO SERA EXCLUIDO!\n";
+                std::cout << "IMPOSSIVEL ATENDER O PEDIDO, TEMOS " << atual->quantidade << " ITENS DE (" << atual->nome;
+                std::cout << ") E FORAM SOLICITADOS " << ped->quantidade_pedidos << " ITENS, O PEDIDO SERA EXCLUIDO!\n";
                 RemoverPedidoInicio(f);
                 return FALHA;
             }
@@ -551,7 +558,7 @@ bool ReabastecerEstoque(Estoque * est, Pilha * pi){
     if(est == NULL || pi == NULL) return FALHA;
     Produto * ultimo = pi->ultimo;
     while(ultimo != NULL){
-    Produto * produto_novo = CriarProduto(ultimo->codigo, ultimo->quantidade, ultimo->nome);
+    Produto * produto_novo = CriarProduto(ultimo->codigo, ultimo->quantidade, ultimo->nome, ultimo->preco);
     AdicionarEstoque(est, produto_novo);
     ultimo = ultimo->anterior;
     RemoverProdutoPilha(pi);
@@ -569,8 +576,8 @@ void MostrarPedido(Pedido * ped){
 
     std::cout << LIMPA;
 
-    std::cout << FUNDO_BRANCO << "Nome do item do pedido: " << ped->nome<< LIMPA_FUNDO << std::endl;
-    std::cout << FUNDO_BRANCO << "Numero de unidades solicitadas no pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Nome do Item do Pedido: " << ped->nome<< LIMPA_FUNDO << std::endl;
+    std::cout << FUNDO_BRANCO << "Numero de Unidades Solicitadas no Pedido: " << ped->quantidade_pedidos << LIMPA_FUNDO << std::endl;
     
     std::cout << MAGENTA;
 
@@ -588,7 +595,7 @@ void MostrarFila(Fila * f){
         return;
     };
 
-    IntroducaoFila(f->tamanho, '@');
+    IntroducaoFila(f->tamanho, '|');
 
     Pedido * atual = f->primeiro;
 

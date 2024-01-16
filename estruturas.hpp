@@ -36,6 +36,7 @@
 struct produto{
     int codigo;
     int quantidade;
+    float preco;
     char nome[TAM_MAX];
     struct produto * proximo;
     struct produto * anterior;
@@ -78,7 +79,7 @@ typedef struct pilha Pilha;
 Estoque * CriarEstoque();
 Fila * CriarFila();
 Pilha * CriarPilha();
-Produto * CriarProduto(int codigo, int quantidade, char * nome);
+Produto * CriarProduto(int codigo, int quantidade, char * nome, float preco);
 Pedido * CriarPedido(char * nome, int quantidade_pedidos);
 
 // Destruição //===================================================================================

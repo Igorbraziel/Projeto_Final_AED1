@@ -13,13 +13,13 @@ int main(){
 
     // inicialização do estoque ==================
     strcpy(nome, "Laranja");
-    AdicionarEstoque(est, CriarProduto(1, 56, nome));
+    AdicionarEstoque(est, CriarProduto(1, 56, nome, 1.50));
 
     strcpy(nome, "Melancia");
-    AdicionarEstoque(est, CriarProduto(13, 102, nome));
+    AdicionarEstoque(est, CriarProduto(13, 102, nome, 4.00));
 
     strcpy(nome, "Uva");
-    AdicionarEstoque(est, CriarProduto(4, 76, nome));
+    AdicionarEstoque(est, CriarProduto(4, 76, nome, 7.50));
 
     /*
     strcpy(nome, "Abacate");
