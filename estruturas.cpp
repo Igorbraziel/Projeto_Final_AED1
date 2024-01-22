@@ -484,10 +484,17 @@ bool RemoverEstoque(Estoque * est, Produto * prod){
 }
 
 bool AtendePedidoFila(Estoque * est, Fila * f){
+    if(est == NULL || f == NULL) return FALHA;
     Pedido * ped = f->primeiro;
-    if(est == NULL || ped == NULL) return FALHA;
     Produto * atual = est->primeiro;
-    if(atual == NULL) return FALHA;
+    if(atual == NULL){
+        std::cout << VERMELHO << "ESTOQUE VAZIO\n" << LIMPA;
+        return FALHA;
+    }
+    if(ped == NULL){
+        std::cout << VERMELHO << "FILA DE PEDIDOS VAZIA\n" << LIMPA;
+        return FALHA;   
+    }
     while(true){
         if(strcmp(atual->nome, ped->nome) == 0){
             if(atual->quantidade >= ped->quantidade_pedidos){
